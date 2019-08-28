@@ -15,6 +15,10 @@ Download and export galleries on E-Hentai/ExHentai in PDF format.
 
 The PDF files should be saved in the `galleries` directory.
 
+## Warning
+
+If you try too hard, your IP address may be banned for 24 hours.
+
 ## TODO
 
 1. Error alerts & retries.
