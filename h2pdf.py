@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 import img2pdf
 import os
+from concurrent.futures import ThreadPoolExecutor
+from functools import partial
 
 from spider import get_image, get_page_links
-from helpers import get_gallery_metadata, parse_args
+from helpers import get_gallery_metadata, parse_args, remove_transparency
 
 ROOT = os.path.dirname(os.path.realpath(__file__))
 
@@ -25,15 +27,17 @@ def main():
 
     print("Getting images...")
     images = []
-    for page, link in enumerate(page_links, 1):
-        image = get_image(link, args.member_id, args.pass_hash, args.raw_images)
-        images.append(image)
-        if args.export_images:
-            with open(image_path + "/" + str(page) + ".jpg", "wb") as f:
-                f.write(image)
+    _get_image = partial(get_image, member_id=args.member_id, pass_hash=args.pass_hash, raw_image=args.raw_images)
+    with ThreadPoolExecutor(max_workers=args.worker) as executor:
+        future = executor.map(_get_image, page_links)
+        for page, image in enumerate(future, 1):
+            images.append(image)
+            if args.export_images:
+                with open(image_path + "/" + str(page) + ".jpg", "wb") as f:
+                    f.write(image)
 
     with open(ROOT + "/galleries/" + gallery["title"] + ".pdf", "wb") as file:
-        file.write(img2pdf.convert(images))
+        file.write(img2pdf.convert([remove_transparency(image) for image in images]))
 
 
 if __name__ == "__main__":

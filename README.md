@@ -21,8 +21,8 @@ If you try too hard, your IP address may be banned for 24 hours.
 
 ## TODO
 
-1. Error alerts & retries.
-1. Support for multithreading.
-1. Support for saving multiple galleries at one time.
-1. Support for proxy.
-1. Progress bar.
+- [x] Error alerts & retries.
+- [x] Support for multithreading.
+- [ ] Support for saving multiple galleries at one time.
+- [ ] Support for proxy.
+- [ ] Progress bar.
